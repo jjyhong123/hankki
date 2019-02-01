@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+h1 {
+  font-size: 100px;
+}
+
+.banner {
+  background: url('./utils/images/kitchen.jpg');
+  background-size: 100%;
+}
+
+#navbarBrand {
+  font-size: 40px;
+}
+
+#navbar {
+  font-size: 20px;
+}
+
+li {
+  display: inline;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+ul {
+  padding: 0;
+}
+
+footer {
+  color: black;
+  font-size: 18px;
+  border-top: 3px solid lightseagreen;
+  background-color: whitesmoke;
+  padding: 40px 0;
+}
+
+.button {
+  color: white;
+  font-size: 18px;
+  background-color: lightseagreen;
+  text-align: center;
+  border: 2px solid lightseagreen;
+  width: 150px;
+  margin: 10px auto;
+  border-radius: 26px;
+  padding: 11px 23px;
+  cursor: pointer;
+}
+
+p {
+  font-size: 14px;
+}
