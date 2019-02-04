@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import io from 'socket.io-client'
+//import OAuth from './OAuth' // 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { } from '@fortawesome/free-solid-svg-icons'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
@@ -14,6 +15,7 @@ import Footer from '../components/footer'
 
 const API_URL = 'http://127.0.0.1:3001'
 const socket = io(API_URL)
+//const providers = ['google', 'facebook'] //
 
 export default class Auth extends Component {
 
@@ -81,22 +83,32 @@ export default class Auth extends Component {
     const { name, photo } = this.state.user
     const { disabled } = this.state
 
+    /*
+    let right = $('div.right').children("div.card-body")[0].scrollHeight;
+    let left = $('div.left').children("div.card-body")[0].scrollHeight;
+    if (right > left && window.innerWidth > 993) {
+      $('div.left').children("div.card-body").css("height", right);
+    }
+    let height = window.screen.availHeight - 200;
+    console.log(height);
+    */
+
     return (
       <div>
-        <div className="banner" style={{ height: /*"723px"*/"650px", textAlign: "center", position: "relative" }}>
+        <div className="banner" style={{ height: /*"723px"*/"724px", textAlign: "center", position: "relative" }}>
 
           <Navbar color="faded" dark expand="md" id="navbar">
-            <NavbarBrand href="/" id="navbarBrand">MYFOODAPP.</NavbarBrand>
+            <NavbarBrand href="/" id="navbarBrand">hankki.</NavbarBrand>
             <Nav className="ml-auto" navbar>
               <NavItem active>
-                <NavLink href="/components/">Components</NavLink>
+                <NavLink href="/components/">About</NavLink>
               </NavItem>
               <NavItem active>
                 {/*<NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>*/}
                 <NavLink
                   onClick={this.startAuth.bind(this)}
                   className={`twitter ${disabled}`}
-                  style={{cursor: "pointer"}}
+                  style={{ cursor: "pointer" }}
                 >Log in with &nbsp;
                 <FontAwesomeIcon
                     icon={faTwitter}
@@ -115,15 +127,15 @@ export default class Auth extends Component {
             />
             <h4>{`@${name}`}</h4>
           </div> : <div style={{ color: "white", fontSize: "65px", height: "100px", width: "100%", position: "absolute", margin: "auto", top: 0, right: 0, bottom: 0, left: 0 }}>
-              Make anything from anything.
+              Make a meal out of anything.
               <div className="button">Get started</div>
-        </div>}
+            </div>}
 
           {/*<input value={props.inputText} onChange={props.inputChange} ></input>
       <p>{props.inputText}</p>*/}
         </div>
 
-        <Footer/>
+        <Footer />
 
       </div>
 

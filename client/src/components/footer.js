@@ -7,6 +7,7 @@ const Footer = () => (
         <Container style={{ textAlign: "center" }}>
             <Row>
                 <Col>
+                    
                     <ul>
                         <li>Contact</li>
                         <li>·</li>
@@ -16,7 +17,9 @@ const Footer = () => (
                         <li>·</li>
                         <li>Terms and Privacy</li>
                     </ul>
-                    <p>Copyright © 2018. All Rights Reserved</p>
+                    
+                    <p id="copyright">Copyright © 2018. All Rights Reserved</p>
+                   
                 </Col>
             </Row>
         </Container>
