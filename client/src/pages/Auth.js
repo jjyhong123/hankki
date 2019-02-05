@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
 import io from 'socket.io-client'
-//import OAuth from './OAuth' // 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { } from '@fortawesome/free-solid-svg-icons'
-import { faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { faTimesCircle } from '@fortawesome/free-regular-svg-icons'
+import { faTwitter, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import "../index.css"
-
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Container, Row, Col, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Nav, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { connect } from 'react-redux';
 import constants from '../utils/constants';
-import { Container, Row, Col, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Nav, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import Footer from '../components/Footer'
 
-import Footer from '../components/footer'
+import AuthButton from '../components/AuthButton' //
 
 const API_URL = 'http://127.0.0.1:3001'
 const socket = io(API_URL)
@@ -19,79 +17,17 @@ const socket = io(API_URL)
 
 export default class Auth extends Component {
 
-  constructor() {
-    super()
-    this.state = {
-      user: {},
-      disabled: ''
-    }
-    this.popup = null
+  state = {
+    modal: false
   }
 
-  componentDidMount() {
-    socket.on('user', user => {
-      this.popup.close()
-      this.setState({ user })
-    })
-  }
-
-  // Routinely checks the popup to re-enable the login button 
-  // if the user closes the popup without authenticating.
-  checkPopup() {
-    const check = setInterval(() => {
-      const { popup } = this
-      if (!popup || popup.closed || popup.closed === undefined) {
-        clearInterval(check)
-        this.setState({ disabled: '' })
-      }
-    }, 1000)
-  }
-
-  // Launches the popup on the server and passes along the socket id so it 
-  // can be used to send back user data to the appropriate socket on 
-  // the connected client.
-  openPopup() {
-    const width = 600, height = 600
-    const left = (window.innerWidth / 2) - (width / 2)
-    const top = (window.innerHeight / 2) - (height / 2)
-
-    const url = `${API_URL}/twitter?socketId=${socket.id}`
-
-    return window.open(url, '',
-      `toolbar=no, location=no, directories=no, status=no, menubar=no, 
-      scrollbars=no, resizable=no, copyhistory=no, width=${width}, 
-      height=${height}, top=${top}, left=${left}`
-    )
-  }
-
-  // Kicks off the processes of opening the popup on the server and listening 
-  // to the popup. It also disables the login button so the user can not 
-  // attempt to login to the provider twice.
-  startAuth() {
-    if (!this.state.disabled) {
-      this.popup = this.openPopup()
-      this.checkPopup()
-      this.setState({ disabled: 'disabled' })
-    }
-  }
-
-  closeCard() {
-    this.setState({ user: {} })
-  }
+  toggle = () => {
+    this.setState({
+      modal: !this.state.modal
+    });
+  };
 
   render() {
-    const { name, photo } = this.state.user
-    const { disabled } = this.state
-
-    /*
-    let right = $('div.right').children("div.card-body")[0].scrollHeight;
-    let left = $('div.left').children("div.card-body")[0].scrollHeight;
-    if (right > left && window.innerWidth > 993) {
-      $('div.left').children("div.card-body").css("height", right);
-    }
-    let height = window.screen.availHeight - 200;
-    console.log(height);
-    */
 
     return (
       <div>
@@ -105,34 +41,28 @@ export default class Auth extends Component {
               </NavItem>
               <NavItem active>
                 {/*<NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>*/}
-                <NavLink
-                  onClick={this.startAuth.bind(this)}
-                  className={`twitter ${disabled}`}
-                  style={{ cursor: "pointer" }}
-                >Log in with &nbsp;
-                <FontAwesomeIcon
-                    icon={faTwitter}
-                  />
+                <NavLink>Log in
                 </NavLink>
               </NavItem>
             </Nav>
           </Navbar>
 
-          {name ? <div className={'card'}>
-            <img src={photo} alt={name} />
-            <FontAwesomeIcon
-              icon={faTimesCircle}
-              className={'close'}
-              onClick={this.closeCard.bind(this)}
-            />
-            <h4>{`@${name}`}</h4>
-          </div> : <div style={{ color: "white", fontSize: "65px", height: "100px", width: "100%", position: "absolute", margin: "auto", top: 0, right: 0, bottom: 0, left: 0 }}>
-              Make a meal out of anything.
-              <div className="button">Get started</div>
-            </div>}
+          <div style={{ color: "white", fontSize: "65px", height: "100px", width: "100%", position: "absolute", margin: "auto", top: 0, right: 0, bottom: 0, left: 0 }}>
+            Make a meal out of anything.
+              <div id="loginButton" onClick={this.toggle}>Get started</div>
+          </div>
 
-          {/*<input value={props.inputText} onChange={props.inputChange} ></input>
-      <p>{props.inputText}</p>*/}
+          {/*Authentication modal*/}
+          <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+            <ModalHeader toggle={this.toggle}>Sign in</ModalHeader>
+            <ModalBody>
+              <AuthButton provider="twitter" icon={faTwitter} socket={socket} />
+              <AuthButton provider="google" icon={faGoogle} socket={socket} />
+              {/*<AuthButton provider="google" icon={faGoogle} socket={socket} />*/}
+              
+            </ModalBody>
+          </Modal>
+
         </div>
 
         <Footer />

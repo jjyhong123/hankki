@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import constants from '../utils/constants';
 import { Card, Button, CardBody, CardImg, CardTitle, CardText, CardDeck, CardSubtitle, CardBodyContainer, Row, Col, Container, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Nav, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import Footer from '../components/footer'
+import Footer from '../components/Footer'
 import "../index.css"
 
 import fridge from "../utils/images/fridge.jpg";

@@ -6,16 +6,29 @@ const session = require('express-session')
 const cors = require('cors')
 const socketio = require('socket.io')
 const { Strategy: TwitterStrategy } = require('passport-twitter')
+const { OAuth2Strategy: GoogleStrategy } = require('passport-google-oauth')
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 // Private api keys that you will get when registering an app on 
 // apps.twitter.com
 const TWITTER_CONFIG = {
-  consumerKey: process.env.CONSUMER_KEY,
-  consumerSecret: process.env.CONSUMER_SECRET,
+  consumerKey: process.env.TWITTER_KEY,
+  consumerSecret: process.env.TWITTER_SECRET,
   // make sure the callbackUrl matches what was set on Twitter
   // when registering the app
   callbackURL: 'http://127.0.0.1:3001/twitter/callback'
 }
+
+// Private api keys that you will get when registering an app on 
+// google developer console
+const GOOGLE_CONFIG = {
+  clientID: process.env.GOOGLE_KEY,
+  clientSecret: process.env.GOOGLE_SECRET,
+  // make sure the callbackUrl matches what was set on Twitter
+  // when registering the app
+  callbackURL: 'http://127.0.0.1:3001/google/callback'
+}
+
 
 // Create the server and allow express and socketio to run on the same port
 const app = express()
@@ -57,8 +70,23 @@ passport.use(new TwitterStrategy(
   })
 )
 
+// Basic setup with passport and Google
+passport.use(new GoogleStrategy(
+  GOOGLE_CONFIG, 
+  (accessToken, refreshToken, profile, cb) => {
+    
+    // save the user right here to a database if you want
+    const user = { 
+      name: profile.displayName,
+      photo: profile.photos[0].value.replace(/sz=50/gi, 'sz=250')
+    }
+    cb(null, user)
+  })
+)
+
 // Middleware that triggers the PassportJS authentication process
 const twitterAuth = passport.authenticate('twitter')
+const googleAuth = passport.authenticate('google', { scope: ['profile'] })
 
 // This custom middleware picks off the socket id (that was put on req.query)
 // and stores it in the session so we can send back the right info to the 
@@ -71,13 +99,23 @@ const addSocketIdToSession = (req, res, next) => {
 // This is endpoint triggered by the popup on the client which starts the whole
 // authentication process
 app.get('/twitter', addSocketIdToSession, twitterAuth)
+app.get('/google', addSocketIdToSession, googleAuth)
 
 // This is the endpoint that Twitter sends the user information to. 
 // The twitterAuth middleware attaches the user to req.user and then
 // the user info is sent to the client via the socket id that is in the 
 // session. 
 app.get('/twitter/callback', twitterAuth, (req, res) => {
-  io.in(req.session.socketId).emit('user', req.user)
+  io.in(req.session.socketId).emit('twitter', req.user)
+  res.end()
+})
+
+// This is the endpoint that Google sends the user information to. 
+// The googleAuth middleware attaches the user to req.user and then
+// the user info is sent to the client via the socket id that is in the 
+// session. 
+app.get('/google/callback', googleAuth, (req, res) => {
+  io.in(req.session.socketId).emit('google', req.user)
   res.end()
 })
 
