@@ -4,30 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { } from '@fortawesome/free-solid-svg-icons'
 import { faTwitter, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import "../index.css"
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Container, Row, Col, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Nav, NavLink, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, Navbar, NavbarBrand, NavItem, Nav, NavLink } from 'reactstrap';
 import { connect } from 'react-redux';
 import constants from '../utils/constants';
 import Footer from '../components/Footer'
-
-import AuthButton from '../components/AuthButton' //
-
+import AuthButton from '../components/AuthButton'
 const API_URL = 'http://127.0.0.1:3001'
 const socket = io(API_URL)
-//const providers = ['google', 'facebook'] //
 
-export default class Auth extends Component {
-
-  state = {
-    modal: false
-  }
-
-  toggle = () => {
-    this.setState({
-      modal: !this.state.modal
-    });
-  };
-
-  render() {
+const Auth = (props) => {
 
     return (
       <div>
@@ -39,36 +24,41 @@ export default class Auth extends Component {
               <NavItem active>
                 <NavLink href="/components/">About</NavLink>
               </NavItem>
-              <NavItem active>
-                {/*<NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>*/}
-                <NavLink>Log in
-                </NavLink>
-              </NavItem>
             </Nav>
           </Navbar>
 
           <div style={{ color: "white", fontSize: "65px", height: "100px", width: "100%", position: "absolute", margin: "auto", top: 0, right: 0, bottom: 0, left: 0 }}>
             Make a meal out of anything.
-              <div id="loginButton" onClick={this.toggle}>Get started</div>
+              <div id="loginButton" onClick={props.toggleModal}>Get started</div>
           </div>
 
           {/*Authentication modal*/}
-          <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
-            <ModalHeader toggle={this.toggle}>Sign in</ModalHeader>
+          <Modal isOpen={props.modal} toggle={props.toggleModal}>
+            <ModalHeader toggle={props.toggleModal}>Sign in</ModalHeader>
             <ModalBody>
               <AuthButton provider="twitter" icon={faTwitter} socket={socket} />
               <AuthButton provider="google" icon={faGoogle} socket={socket} />
-              {/*<AuthButton provider="google" icon={faGoogle} socket={socket} />*/}
-              
             </ModalBody>
           </Modal>
-
         </div>
-
         <Footer />
-
       </div>
-
     )
+}
+
+function mapStateToProps(state) {
+  return {
+    modal: state.modal
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    toggleModal: (evt) => {
+      const action = { type: constants.TOGGLE_MODAL }
+      dispatch(action)
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

@@ -7,7 +7,6 @@ const cors = require('cors')
 const socketio = require('socket.io')
 const { Strategy: TwitterStrategy } = require('passport-twitter')
 const { OAuth2Strategy: GoogleStrategy } = require('passport-google-oauth')
-// const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 // Private api keys that you will get when registering an app on 
 // apps.twitter.com

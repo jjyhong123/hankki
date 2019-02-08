@@ -1,3 +1,6 @@
 export default {
-    CHANGE_INPUT_TEXT: 'CHANGE_INPUT_TEXT'  
+
+    TOGGLE_MODAL: 'TOGGLE_MODAL',
+    SIGN_OUT: 'SIGN_OUT',
+    SET_USER: 'SET_USER'  
 }

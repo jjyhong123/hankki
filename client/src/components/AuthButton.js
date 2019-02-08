@@ -1,33 +1,23 @@
 import React, { Component } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { connect } from 'react-redux';
+import constants from '../utils/constants';
+import { withRouter } from "react-router-dom"
 const API_URL = 'http://127.0.0.1:3001'
 
-export default class AuthButton extends Component {
-
-    state = {
-        user: {},
-        disabled: ''
-    }
+class AuthButton extends Component {
 
     componentDidMount() {
         const { socket, provider } = this.props
 
         socket.on(provider, user => {
             this.popup.close()
-            this.setState({ user })
+            this.props.setUser(user)
+            sessionStorage.setItem("name", user.name)
+            sessionStorage.setItem("photo", user.photo)
+            const { history } = this.props
+            history.push('/home')
         })
-    }
-
-    // Routinely checks the popup to re-enable the login button 
-    // if the user closes the popup without authenticating.
-    checkPopup() {
-        const check = setInterval(() => {
-            const { popup } = this
-            if (!popup || popup.closed || popup.closed === undefined) {
-                clearInterval(check)
-                this.setState({ disabled: '' })
-            }
-        }, 1000)
     }
 
     // Launches the popup by making a request to the server and then 
@@ -51,26 +41,18 @@ export default class AuthButton extends Component {
     // to the popup. It also disables the login button so the user can not 
     // attempt to login to the provider twice.
     startAuth(e) {
-        if (!this.state.disabled) {
-            e.preventDefault()
-            this.popup = this.openPopup()
-            this.checkPopup()
-            this.setState({ disabled: 'disabled' })
-        }
+        e.preventDefault()
+        this.popup = this.openPopup()
     }
 
-    // render method to follow
     render() {
-        const { name, photo } = this.state.user
-        const { provider, icon } = this.props
-        const { disabled } = this.state
+        const { provider, icon, history } = this.props
 
         return (
             <div>
                 <div className={'button-wrapper fadein-fast'}>
                     <button
                         onClick={this.startAuth.bind(this)}
-                        className={`${provider} ${disabled} button`}
                     >
                         <FontAwesomeIcon
                             icon={icon}
@@ -81,3 +63,20 @@ export default class AuthButton extends Component {
         )
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        user: state.user
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        setUser: (user) => {
+            const action = { type: constants.SET_USER, user: user }
+            dispatch(action)
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AuthButton));

@@ -17,8 +17,8 @@ const App = ({ store }) => (
         <Route exact path="/" component={Auth} />
         <Route exact path="/home" component={Home} />
         <Route exact path="/kitchen" component={Kitchen} />
-        <Route exact path="/recipes" component={Recipes} />
-        <Route exact path="/profile" component={Profile} />
+        {/*<Route exact path="/recipes" component={Recipes} />*/}
+        {/*<Route exact path="/profile" component={Profile} />*/}
       </Switch>
 
     </Router>
