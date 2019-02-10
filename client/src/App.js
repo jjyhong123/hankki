@@ -7,6 +7,7 @@ import Kitchen from "./pages/Kitchen.js";
 import Recipes from "./pages/Recipes.js";
 import Profile from "./pages/Profile.js";
 import Auth from "./pages/Auth.js";
+import Fridge from "./pages/Fridge.js"
 
 
 const App = ({ store }) => (
@@ -17,6 +18,7 @@ const App = ({ store }) => (
         <Route exact path="/" component={Auth} />
         <Route exact path="/home" component={Home} />
         <Route exact path="/kitchen" component={Kitchen} />
+        <Route exact path="/fridge" component={Fridge} />
         {/*<Route exact path="/recipes" component={Recipes} />*/}
         {/*<Route exact path="/profile" component={Profile} />*/}
       </Switch>
